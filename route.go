@@ -1,6 +1,5 @@
 package main
 
-
 // Route => "destination": ["path", "to", "get", "there"]
 type Route map[string][]string
 

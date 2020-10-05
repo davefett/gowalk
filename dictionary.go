@@ -22,12 +22,12 @@ func (d Dictionary) Mutate(word string) Dictionary {
 	var mutant string
 
 	for i := range word {
-		mutant = word[:i] + word[i +1:]
+		mutant = word[:i] + word[i+1:]
 		if d.Contains(mutant) {
 			mutations[mutant] = true
 		}
 
-		for _, c:= range letters {
+		for _, c := range letters {
 			mutant = word[:i] + c + word[i:]
 			if d.Contains(mutant) {
 				mutations[mutant] = true
@@ -60,4 +60,3 @@ func _getLetters() []string {
 	}
 	return letters
 }
-
