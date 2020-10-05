@@ -37,7 +37,6 @@ func (d Dictionary) Mutate(word string) Dictionary {
 			if d.Contains(mutant) {
 				mutations[mutant] = true
 			}
-
 		}
 	}
 
@@ -49,6 +48,7 @@ func (d Dictionary) Mutate(word string) Dictionary {
 	}
 
 	delete(mutations, word)
+
 	return mutations
 }
 

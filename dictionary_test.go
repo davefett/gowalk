@@ -1,7 +1,6 @@
 package main
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -38,14 +37,20 @@ func TestDictionary(t *testing.T) {
 
 		actual := dict.Mutate("test")
 
-		expected := Dictionary{
-			"best":  true,
-			"tet":   true,
-			"tests": true,
+		expected := []string{
+			"best",
+			"tests",
+			"tet",
 		}
 
-		if !reflect.DeepEqual(actual, expected) {
-			t.Errorf("expected %v to equal %v", actual, expected)
+		if len(expected) != len(actual) {
+			t.Errorf("Expected there to be %d mutations", len(expected))
+		}
+
+		for _, word := range expected {
+			if !actual.Contains(word) {
+				t.Errorf("Expected %s to be returned but it wasn't", word)
+			}
 		}
 	})
 
