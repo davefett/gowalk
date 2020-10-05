@@ -4,5 +4,10 @@ import "fmt"
 
 func main() {
 	finder := NewFinder()
-	fmt.Println(finder.FindPath("charitably", "embanked"))
+
+	route, err := finder.FindPath("charitably", "embanked")
+	if err != nil {
+		fmt.Errorf("encountered an error: %v", err)
+	}
+	fmt.Println(route)
 }
