@@ -22,7 +22,7 @@ func TestDictionary(t *testing.T) {
 
 		dict.Add("test")
 
-		if !dict.Exists("test") {
+		if !dict.Contains("test") {
 			t.Errorf("exists should indicate that the word is present")
 		}
 	})
