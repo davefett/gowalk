@@ -29,7 +29,8 @@ func (ws *WordServer) WordHandler(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "PUT" {
 		ws.dictService.Add(word)
 		w.WriteHeader(http.StatusCreated)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
 	}
-
 
 }

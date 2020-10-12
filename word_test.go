@@ -82,6 +82,23 @@ func TestPutWord(t *testing.T) {
 	})
 }
 
+func TestOtherMethods(t *testing.T) {
+	wordServer := &WordServer{nil}
+
+	router := mux.NewRouter()
+	router.Handle("/words/{.*}", http.HandlerFunc(wordServer.WordHandler))
+
+	request, err := http.NewRequest(http.MethodPost, "/words/badreq", nil)
+	if err != nil {
+		t.Errorf("unable to create request %v", err)
+	}
+
+	response := httptest.NewRecorder()
+	router.ServeHTTP(response, request)
+
+	assertStatusCode(t, response, http.StatusBadRequest)
+}
+
 func assertStatusCode(t *testing.T, r *httptest.ResponseRecorder, expected int) {
 	t.Helper()
 
