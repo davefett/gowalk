@@ -22,8 +22,10 @@ func handleRequests() {
 	wordServer := WordServer{dictionaryService}
 	routeServer := RouteServer{Finder{dictionaryService}}
 
-	router.Handle("/words/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler)).Methods("GET")
-	router.Handle("/routes", http.HandlerFunc(routeServer.RouteHandler)).Methods("PUT")
+	router.Path("/words/{word:[a-zA-Z]+}").
+		HandlerFunc(wordServer.WordHandler)
+	router.Path("/routes").
+		HandlerFunc(routeServer.RouteHandler)
 
 	server := &http.Server{
 		Handler:      router,

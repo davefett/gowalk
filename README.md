@@ -12,6 +12,25 @@ The Gorilla Mux library is required:
     go get -u github.com/gorilla/mux 
     
     
+## Run
+    git clone git@github.com:davefett/gowalk.git
+    cd ./gowalk
+    go test && go build
+    ./gowalk (ctl-c to exit)
+    
+Open a new terminal window
+
+    curl http://127.0.0.1:8080/words/racecar
+
+Should be false, 
+
+    curl -X PUT http://127.0.0.1:8080/words/racecar    
+    curl http://127.0.0.1:8080/words/racecar
+
+Should be true now.
+
+    curl http://127.0.0.1:8080/routes\?start\=charitably\&end\=embanked 
+    
 ## API
 
 #### GET /words/{word}
