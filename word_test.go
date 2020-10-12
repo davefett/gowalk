@@ -23,12 +23,13 @@ func (d DictionaryStub) Mutate(word string) Dictionary {
 }
 
 func TestWord(t *testing.T) {
+	stub := &DictionaryStub{}
+	wordServer := &WordServer{stub}
+
+	router := mux.NewRouter()
+	router.Handle("/word/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler))
 
 	t.Run("GET word returns true if valid", func(t *testing.T) {
-		var stub DictionaryService
-		stub = DictionaryStub{}
-		wordServer := WordServer{stub}
-
 		request, err := http.NewRequest(http.MethodGet, "/word/test", nil)
 		if err != nil {
 			t.Errorf("unable to create request %v", err)
@@ -36,55 +37,42 @@ func TestWord(t *testing.T) {
 
 		response := httptest.NewRecorder()
 
-		router := mux.NewRouter()
-
 		router.Handle("/word/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler))
 		router.ServeHTTP(response, request)
 
-		if status := response.Code; status != http.StatusOK {
-			t.Errorf("receive status %v, expecting %v", status, 200)
-		}
+		assertStatusCode(t, response, http.StatusOK)
 
-		expected := Word{"test", true}
-		var actual Word
-		err = json.Unmarshal(response.Body.Bytes(), &actual)
-		if err != nil {
-			t.Errorf("unable to decode %v as json", response.Body.String())
-		}
-		if !reflect.DeepEqual(actual, expected) {
-			t.Errorf("received %v, expected %v", actual, expected)
-		}
+		assertStatusCode(t, response, http.StatusOK)
+		assertWordEquals(t, response, Word{"test", true})
 	})
 
 	t.Run("GET invalid word returns false if valid", func(t *testing.T) {
-		var stub DictionaryService
-		stub = DictionaryStub{}
-		wordServer := WordServer{stub}
-
 		request, err := http.NewRequest(http.MethodGet, "/word/fail", nil)
 		if err != nil {
 			t.Errorf("unable to create request %v", err)
 		}
 
 		response := httptest.NewRecorder()
-
-		router := mux.NewRouter()
-
-		router.Handle("/word/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler))
 		router.ServeHTTP(response, request)
 
-		if status := response.Code; status != http.StatusOK {
-			t.Errorf("receive status %v, expecting %v", status, 200)
-		}
-
-		expected := Word{"fail", false}
-		var actual Word
-		err = json.Unmarshal(response.Body.Bytes(), &actual)
-		if err != nil {
-			t.Errorf("unable to decode %v as json", response.Body.String())
-		}
-		if !reflect.DeepEqual(actual, expected) {
-			t.Errorf("received %v, expected %v", actual, expected)
-		}
+		assertStatusCode(t, response, http.StatusOK)
+		assertWordEquals(t, response, Word{"fail", false})
 	})
+}
+
+func assertStatusCode(t *testing.T, r *httptest.ResponseRecorder, expected int) {
+	if actual := r.Code; actual != expected {
+		t.Errorf("receive status %v, expecting %v", actual, expected)
+	}
+}
+
+func assertWordEquals(t *testing.T, r *httptest.ResponseRecorder, expected Word) {
+	var actual Word
+	err := json.Unmarshal(r.Body.Bytes(), &actual)
+	if err != nil {
+		t.Errorf("unable to decode %v as json", r.Body.String())
+	}
+	if !reflect.DeepEqual(actual, expected) {
+		t.Errorf("received %v, expected %v", actual, expected)
+	}
 }
