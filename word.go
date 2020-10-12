@@ -16,6 +16,7 @@ type WordServer struct {
 	dictService DictionaryService
 }
 
+// Handle the /words/ endpoint
 func (ws *WordServer) WordHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	word := vars["word"]

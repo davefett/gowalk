@@ -12,7 +12,12 @@ type Finder struct {
 	dict DictionaryService
 }
 
-// Route => "destination": ["path", "to", "get", "there"]
+// Route: map("key") path []string
+
+// Find a path between two strings by computing all possible permutations of a word in an array,
+// and seeing if it shares that word with the words in the other 'route'.  The start and end words
+// must be present in the dictionary.  If a match is not found, the function will 'extend' the
+// smaller of the two routes and recursively call itself with the new route.
 func (f Finder) FindPath(start string, end string) ([]string, error) {
 
 	if !f.dict.Contains(start) {
@@ -40,6 +45,7 @@ func (f Finder) FindPath(start string, end string) ([]string, error) {
 	return result, nil
 }
 
+// Find the shortest path between two routes.
 func (f Finder) _findPath(left Route, right Route) ([]string, error) {
 	if len(left) == 0 || len(right) == 0 {
 		return nil, fmt.Errorf("no match")
@@ -76,6 +82,7 @@ func (f Finder) _findPath(left Route, right Route) ([]string, error) {
 	}
 }
 
+// Determine if there are any shared words between two routes.
 func checkMatch(left Route, right Route) string {
 	for k, _ := range left {
 		if _, ok := right[k]; ok {
@@ -85,13 +92,17 @@ func checkMatch(left Route, right Route) string {
 	return ""
 }
 
+// Glue two routes (string arrays) together with an intervening word.
+// The second array is reversed prior to concatenation.
+// For example:
+// left: [one, two], right: [shoe, my], word: buckle => [one, two, buckle, my, shoe]
 func makePath(left Route, right Route, word string) ([]string, error) {
-
 	newPath := append(left[word], word)
 	newPath = append(newPath, reverseArray(right[word])...)
 	return newPath, nil
 }
 
+// Reverse an array of strings.
 func reverseArray(words []string) []string {
 	wordsLen := len(words)
 	reversed := make([]string, wordsLen)

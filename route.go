@@ -20,6 +20,8 @@ type RouteServer struct {
 	finderService FinderService
 }
 
+// Endpoint for /routes
+// TODO: move this to it's own file?
 func (rs *RouteServer) RouteHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		start := r.URL.Query().Get("start")
@@ -37,11 +39,15 @@ func (rs *RouteServer) RouteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Does this route contain the destination>?
 func (r Route) HasDestination(dest string) bool {
 	_, ok := r[dest]
 	return ok
 }
 
+// Does the destination string array in the route contain the needle string?
+// This is potentially one of the places to look to optimize, the array lookups, while never larger
+// than 99 elements in the current implementation, are still O(n).
 func (r Route) PathContains(dest string, needle string) bool {
 	for _, word := range r[dest] {
 		if word == needle {

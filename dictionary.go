@@ -13,8 +13,12 @@ type DictionaryService interface {
 	Add(word string)
 }
 
+// Using a map here due to having the key lookup complexity of O(1), instead of O(n) lookup complexity
+// in an array.
 type Dictionary map[string]bool
 
+// Create a new file based dictionary.  The dictionary should be a plain text file with one
+// word per line.
 func NewFileDictionary(fileName string) Dictionary {
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -36,16 +40,21 @@ func NewFileDictionary(fileName string) Dictionary {
 	return wordMap
 }
 
+// Adds a word to the dictionary.
 func (d Dictionary) Add(word string) {
 	d[word] = true
 }
 
+// Does the word exist in the dictionary?
 func (d Dictionary) Contains(word string) bool {
 	_, ok := d[word]
 
 	return ok
 }
 
+// Computes all valid mutations of a word.  Valid mutations are all only a single letter change,
+// either added, deleted, or changed within the word.  A word must be in the dictionary
+// to be considered valid, and a word cannot mutate into itself.
 func (d Dictionary) Mutate(word string) Dictionary {
 	letters := _getLetters()
 	mutations := make(Dictionary)
@@ -82,6 +91,7 @@ func (d Dictionary) Mutate(word string) Dictionary {
 	return mutations
 }
 
+// Get an array of lowercase letters from 'a' to 'z'
 func _getLetters() []string {
 	var letters []string
 
