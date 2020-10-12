@@ -13,7 +13,7 @@ type Word struct {
 }
 
 type WordServer struct {
-	dictionary DictionaryService
+	dictService DictionaryService
 }
 
 func (ws *WordServer) WordHandler(w http.ResponseWriter, r *http.Request) {
@@ -21,10 +21,15 @@ func (ws *WordServer) WordHandler(w http.ResponseWriter, r *http.Request) {
 	word := vars["word"]
 
 	if r.Method == "GET" {
-		payload := Word{word, ws.dictionary.Contains(word)}
+		payload := Word{word, ws.dictService.Contains(word)}
 		err := json.NewEncoder(w).Encode(payload)
 		if err != nil {
 			log.Fatalf("unable to serialize %v: %v", payload, err)
 		}
+	} else if r.Method == "PUT" {
+		ws.dictService.Add(word)
+		w.WriteHeader(http.StatusCreated)
 	}
+
+
 }

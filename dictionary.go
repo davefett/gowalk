@@ -10,6 +10,7 @@ import (
 type DictionaryService interface {
 	Contains(word string) bool
 	Mutate(word string) Dictionary
+	Add(word string)
 }
 
 type Dictionary map[string]bool

@@ -13,13 +13,17 @@ type DictionaryStub struct {
 }
 
 func (d DictionaryStub) Contains(word string) bool {
-	return word == "test"
+	return word == "validword"
 }
 
 func (d DictionaryStub) Mutate(word string) Dictionary {
 	dictionary = make(Dictionary)
 	dictionary[word] = true
 	return dictionary
+}
+
+func (d DictionaryStub) Add(_ string) {
+	// noop
 }
 
 func TestGetWord(t *testing.T) {
@@ -30,7 +34,7 @@ func TestGetWord(t *testing.T) {
 	router.Handle("/words/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler))
 
 	t.Run("GET word returns true if valid", func(t *testing.T) {
-		request, err := http.NewRequest(http.MethodGet, "/words/test", nil)
+		request, err := http.NewRequest(http.MethodGet, "/words/validword", nil)
 		if err != nil {
 			t.Errorf("unable to create request %v", err)
 		}
@@ -41,7 +45,7 @@ func TestGetWord(t *testing.T) {
 		router.ServeHTTP(response, request)
 
 		assertStatusCode(t, response, http.StatusOK)
-		assertWordEquals(t, response, Word{"test", true})
+		assertWordEquals(t, response, Word{"validword", true})
 	})
 
 	t.Run("GET invalid word returns false if valid", func(t *testing.T) {
@@ -55,6 +59,26 @@ func TestGetWord(t *testing.T) {
 
 		assertStatusCode(t, response, http.StatusOK)
 		assertWordEquals(t, response, Word{"fail", false})
+	})
+}
+
+func TestPutWord(t *testing.T) {
+	stub := &DictionaryStub{}
+	wordServer := &WordServer{stub}
+
+	router := mux.NewRouter()
+	router.Handle("/words/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler))
+
+	t.Run("should PUT new words into dictionary", func(t *testing.T) {
+		request, err := http.NewRequest(http.MethodPut, "/words/newword", nil)
+		if err != nil {
+			t.Errorf("unable to create request %v", err)
+		}
+
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, request)
+
+		assertStatusCode(t, response, http.StatusCreated)
 	})
 }
 
