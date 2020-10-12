@@ -7,7 +7,6 @@ import (
 	"time"
 )
 
-
 var dictionary Dictionary
 var finder Finder
 
@@ -30,4 +29,3 @@ func handleRequests() {
 
 	log.Fatal(server.ListenAndServe())
 }
-

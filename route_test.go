@@ -14,8 +14,8 @@ func TestRoute(t *testing.T) {
 
 	t.Run("check if route's path contains a word", func(t *testing.T) {
 		route := Route{
-			"number":  []string{"one", "two", "three"},
-			"alpha": []string{"ay", "bee", "cee"},
+			"number": []string{"one", "two", "three"},
+			"alpha":  []string{"ay", "bee", "cee"},
 		}
 
 		if !route.PathContains("number", "two") {
@@ -26,6 +26,5 @@ func TestRoute(t *testing.T) {
 			t.Errorf("route should not contain this element")
 		}
 	})
-
 
 }
