@@ -18,8 +18,8 @@ func main() {
 func handleRequests() {
 	router := mux.NewRouter()
 
-	wordServer := WordServer{NewDictionary("words_alpha.txt")}
-	router.Handle("/word/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler))
+	wordServer := WordServer{NewFileDictionary("words_alpha.txt")}
+	router.Handle("/word/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler)).Methods("GET")
 
 	server := &http.Server{
 		Handler:      router,

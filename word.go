@@ -13,7 +13,7 @@ type Word struct {
 }
 
 type WordServer struct {
-	dictionary Dictionary
+	dictionary DictionaryService
 }
 
 func (ws *WordServer) WordHandler(w http.ResponseWriter, r *http.Request) {

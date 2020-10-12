@@ -7,9 +7,14 @@ import (
 	"os"
 )
 
+type DictionaryService interface {
+	Contains(word string) bool
+	Mutate(word string) Dictionary
+}
+
 type Dictionary map[string]bool
 
-func NewDictionary(fileName string) Dictionary {
+func NewFileDictionary(fileName string) Dictionary {
 	file, err := os.Open(fileName)
 	if err != nil {
 		log.Fatalf("unable to open dictionary file %v", fileName)

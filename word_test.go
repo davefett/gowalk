@@ -9,9 +9,27 @@ import (
 	"testing"
 )
 
+type DictionaryStub struct {
+}
+
+func (d DictionaryStub) Contains(word string) bool {
+	return word == "test"
+}
+
+func (d DictionaryStub) Mutate(word string) Dictionary {
+	dictionary = make(Dictionary)
+	dictionary[word] = true
+	return dictionary
+}
+
 func TestWord(t *testing.T) {
 
 	t.Run("GET word returns true if valid", func(t *testing.T) {
+		var stub DictionaryService
+		stub = DictionaryStub{}
+		wordServer := WordServer{stub}
+
+
 		request, err := http.NewRequest(http.MethodGet, "/word/test", nil)
 		if err != nil {
 			t.Errorf("unable to create request %v", err)
@@ -19,7 +37,6 @@ func TestWord(t *testing.T) {
 
 		response := httptest.NewRecorder()
 
-		wordServer := WordServer{NewDictionary("words_alpha.txt")}
 		router := mux.NewRouter()
 
 		router.Handle("/word/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler))
@@ -39,4 +56,5 @@ func TestWord(t *testing.T) {
 			t.Errorf("received %v, expected %v", actual, expected)
 		}
 	})
+
 }

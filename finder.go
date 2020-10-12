@@ -5,7 +5,7 @@ import (
 )
 
 type Finder struct {
-	dict Dictionary
+	dict DictionaryService
 }
 
 // Route => "destination": ["path", "to", "get", "there"]

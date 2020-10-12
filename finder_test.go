@@ -7,7 +7,7 @@ import (
 
 func TestFinder(t *testing.T) {
 
-	finder := Finder{NewDictionary("words_alpha.txt")}
+	finder := Finder{NewFileDictionary("words_alpha.txt")}
 
 	t.Run("should return error if provided with an invalid start word", func(t *testing.T) {
 		//var path []string
