@@ -3,7 +3,6 @@ package main
 // Route => "destination": ["path", "to", "get", "there"]
 type Route map[string][]string
 
-
 // Does this route contain the destination>?
 func (r Route) HasDestination(dest string) bool {
 	_, ok := r[dest]
