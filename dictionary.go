@@ -1,10 +1,34 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
 )
 
 type Dictionary map[string]bool
+
+func NewDictionary(fileName string) Dictionary {
+	file, err := os.Open(fileName)
+	if err != nil {
+		log.Fatalf("unable to open dictionary file %v", fileName)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+
+	wordMap := make(Dictionary)
+	for scanner.Scan() {
+		word := scanner.Text()
+		if len(word) > 0 {
+			wordMap[word] = true
+		}
+	}
+
+	return wordMap
+}
 
 func (d Dictionary) Add(word string) {
 	d[word] = true

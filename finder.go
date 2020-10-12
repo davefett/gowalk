@@ -1,17 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 )
 
 type Finder struct {
 	dict Dictionary
-}
-
-func NewFinder() *Finder {
-	return &Finder{dict: _getWords("words_alpha.txt")}
 }
 
 // Route => "destination": ["path", "to", "get", "there"]
@@ -103,25 +97,4 @@ func reverseArray(words []string) []string {
 	}
 
 	return reversed
-}
-
-func _getWords(fileName string) Dictionary {
-	file, err := os.Open(fileName)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	wordMap := make(Dictionary)
-	for scanner.Scan() {
-		word := scanner.Text()
-		if len(word) > 0 {
-			wordMap[word] = true
-		}
-	}
-
-	return wordMap
 }
