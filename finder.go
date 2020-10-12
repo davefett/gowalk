@@ -4,6 +4,10 @@ import (
 	"fmt"
 )
 
+type FinderService interface {
+	FindPath(start string, end string) ([]string, error)
+}
+
 type Finder struct {
 	dict DictionaryService
 }
