@@ -22,15 +22,15 @@ func (d DictionaryStub) Mutate(word string) Dictionary {
 	return dictionary
 }
 
-func TestWord(t *testing.T) {
+func TestGetWord(t *testing.T) {
 	stub := &DictionaryStub{}
 	wordServer := &WordServer{stub}
 
 	router := mux.NewRouter()
-	router.Handle("/word/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler))
+	router.Handle("/words/{word:[a-zA-Z]+}", http.HandlerFunc(wordServer.WordHandler))
 
 	t.Run("GET word returns true if valid", func(t *testing.T) {
-		request, err := http.NewRequest(http.MethodGet, "/word/test", nil)
+		request, err := http.NewRequest(http.MethodGet, "/words/test", nil)
 		if err != nil {
 			t.Errorf("unable to create request %v", err)
 		}
@@ -41,13 +41,11 @@ func TestWord(t *testing.T) {
 		router.ServeHTTP(response, request)
 
 		assertStatusCode(t, response, http.StatusOK)
-
-		assertStatusCode(t, response, http.StatusOK)
 		assertWordEquals(t, response, Word{"test", true})
 	})
 
 	t.Run("GET invalid word returns false if valid", func(t *testing.T) {
-		request, err := http.NewRequest(http.MethodGet, "/word/fail", nil)
+		request, err := http.NewRequest(http.MethodGet, "/words/fail", nil)
 		if err != nil {
 			t.Errorf("unable to create request %v", err)
 		}
@@ -61,12 +59,16 @@ func TestWord(t *testing.T) {
 }
 
 func assertStatusCode(t *testing.T, r *httptest.ResponseRecorder, expected int) {
+	t.Helper()
+
 	if actual := r.Code; actual != expected {
 		t.Errorf("receive status %v, expecting %v", actual, expected)
 	}
 }
 
 func assertWordEquals(t *testing.T, r *httptest.ResponseRecorder, expected Word) {
+	t.Helper()
+
 	var actual Word
 	err := json.Unmarshal(r.Body.Bytes(), &actual)
 	if err != nil {
